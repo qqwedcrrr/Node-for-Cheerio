@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "koa": "^2.7.0",
     "koa-router": "^7.4.0",
+    "mongoose": "^5.4.15",
     "request": "^2.88.0",
+    "superagent": "^4.1.0",
+    "superagent-charset": "^1.2.0",
     "supervisor": "^0.12.0"
   },
   "devDependencies": {},
