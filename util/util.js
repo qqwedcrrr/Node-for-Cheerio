@@ -27,7 +27,6 @@ function randomUserAgent() {
 }
 
 function createRequestByUrl(url,path, method, data) {
-  console.log('heh')
   return new Promise((resolve, reject) => {
     const options = {
       url: `${url}${path}`,

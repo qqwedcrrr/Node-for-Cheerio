@@ -9,6 +9,7 @@ const Koa = require('koa'),
     router = new Router();
 require('superagent-charset')(superagent);
 let arr;
+let index = 0;
 
 mongoose.connect('mongodb://localhost:27017');
 const con = mongoose.connection;
@@ -21,8 +22,17 @@ videoModel.remove({},function(err,res){
     console.log(res,'remove all');
 })
 
-setInterval(()=>{
-    const url = 'https://koa.bootcss.com/';
+let timer = setInterval(()=>{
+    let url;
+    if(index > 150){
+        clearInterval(timer);
+    }
+    if(!index){
+        url = 'https://www.tom589.com/guochanzipai/index.html';
+    }else {
+        url = `https://www.tom589.com/guochanzipai/index_${index}.html`
+    }
+    index+=1;
     superagent.get(url)
         .charset('utf-8') //当前页面编码格式
         .end((err, sres) => { //页面获取到的数据
@@ -35,20 +45,32 @@ setInterval(()=>{
             videoModel.find({},function(err,res){
                 console.log(res)
             })
-            //下面类似于jquery的操作，前端的小伙伴们肯定很熟悉啦
-            $("h1").each((index, element) => {
-                var $text = $(element).text();
-                arr.push($text);
+            $('.content_top .listBox').each((index, obj) => {
+                const $this = $(obj);
+                const mainInfo = $this.children('.v_name');
+                const timeInfo = $this.children('.img_wrap');
+                const timeLength = timeInfo.children('a').children('.v_time').text();
+                const title = mainInfo.children('.v_name_info').children('a').attr('title');
+                const id = mainInfo.children('.v_name_info').children('a').attr('href');
+                let pv = mainInfo.children('p').text();
+                pv = Number(pv.match(/[0-9]*$/)[0])
+                const newText = new videoModel({
+                    id: id,
+                    title: title,
+                    link: id,
+                    pv: pv,
+                    timeLength: timeLength,
+                });
+                newText.save();
             });
-            let newText = new videoModel({title:arr});
-            newText.save();
+            videoModel
         });
-},5000)
+},50)
 
 app
     .use(router.routes())
     .use(router.allowedMethods());
 
-app.listen(3000, () => {
-    console.log('[服务已开启,访问地址为：] http://127.0.0.1:3000/');
+app.listen(3001, () => {
+    console.log('[服务已开启,访问地址为：] http://127.0.0.1:3001/');
 });

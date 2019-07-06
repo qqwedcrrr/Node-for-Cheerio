@@ -11,3 +11,5 @@ videoSchema.deleteByName = function(name,cb){
 videoSchema.update = function(source,update){
     return this.update(source,update)
 }
+
+videoSchema.sort = function()
